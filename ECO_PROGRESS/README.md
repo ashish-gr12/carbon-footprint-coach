@@ -1,16 +1,71 @@
-# React + Vite
+# Eco Progress 🌱
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Carbon Footprint Awareness Platform designed to help individuals understand, track, and reduce their carbon emissions through personalized insights, AI-powered recommendations, weekly sustainability roadmaps, and progress tracking.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Current Progress
 
-## React Compiler
+* React + Vite Setup
+* Tailwind CSS Integration
+* Application Routing
+* Project Structure Setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Planned Features
 
-## Expanding the ESLint configuration
+* User Authentication (Supabase)
+* Carbon Footprint Calculator
+* Emission Analysis Dashboard
+* AI Sustainability Coach
+* Personalized Recommendations
+* Weekly Carbon Reduction Roadmap
+* Progress Tracking
+* Leaderboard Ranking System
+* Eco Score System
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tech Stack
+
+### Frontend
+
+* React
+* Vite
+* Tailwind CSS
+* React Router
+
+### Backend & Database
+
+* Supabase
+* PostgreSQL
+
+### Deployment
+
+* Vercel
+
+## Project Structure
+
+```text
+src
+├── components
+├── pages
+├── routes
+├── services
+├── hooks
+├── utils
+├── lib
+└── assets
+```
+
+## Installation
+
+```bash
+npm install
+npm run dev
+```
+
+## Vision
+
+The goal of Eco Progress is to move beyond simple carbon calculators and provide users with actionable guidance, personalized improvement plans, and long-term sustainability tracking.
+
+## Status
+
+🚧 Currently in active development.
