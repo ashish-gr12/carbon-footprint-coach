@@ -9,6 +9,8 @@ import {
   calculateEmissions,
 } from "../utils/emissionCalculator";
 import { useNavigate } from "react-router-dom";
+import { saveEmission } from "../services/emissionService";
+import { getCurrentUser } from "../services/authService";
 
 function Calculator() {
   const [transport, setTransport] = useState("");
@@ -24,7 +26,7 @@ function Calculator() {
   const [vehicleType, setVehicleType] = useState("car");
   const [fuelType, setFuelType] = useState("petrol");
   const navigate = useNavigate();
-  const handleCalculate = () => {
+  const handleCalculate = async () => {
   if (
     transport === "" &&
     shortFlights === "" &&
@@ -75,6 +77,37 @@ function Calculator() {
       travelSpend,
     });
 
+    const user = await getCurrentUser();
+    const { error } = await saveEmission({
+      user_id: user.id,
+
+      vehicle_type: vehicleType,
+      transport: result.transport,
+
+      short_flights: result.shortFlights,
+      long_flights: result.longFlights,
+      flights: result.flights,
+
+      fuel_type: fuelType,
+      fuel: result.fuel,
+
+      electricity: result.electricity,
+      gas: result.gas,
+
+      food: result.food,
+      shopping: result.shopping,
+      electronics: result.electronics,
+      travel: result.travelSpend,
+
+      total: result.total,
+    });
+    
+    if (error) {
+      console.error(error);
+      alert("Failed to save emission data");
+      return;
+    }
+    
     navigate("/results", {
       state: result,
     });
