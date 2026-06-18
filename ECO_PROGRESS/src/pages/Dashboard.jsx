@@ -5,15 +5,22 @@ import {
   getLatestEmission,
   getEmissionHistory,
 } from "../services/emissionService";
+import {
+  getUserGoal,
+  updateUserGoal,
+} from "../services/goalService";
 
 function Dashboard() {
   const navigate = useNavigate();
   const [latestEmission, setLatestEmission] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [goal, setGoal] = useState(300);
+  const [newGoal, setNewGoal] = useState("");
   useEffect(() => {
   const loadDashboard = async () => {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser();  
+  
 
       if (!user) {
         setLoading(false);
@@ -26,8 +33,16 @@ function Dashboard() {
       const { data: historyData } =
         await getEmissionHistory(user.id);
 
+      const { data: goalData } =
+        await getUserGoal(user.id);
+
       setLatestEmission(latest);
       setHistory(historyData || []);
+
+      if (goalData?.goal) {
+        setGoal(goalData.goal);
+      }
+
       setLoading(false);
     };
 
@@ -41,6 +56,7 @@ function Dashboard() {
 
   const getBiggestContributor = () => {
   if (!latestEmission) return "--";
+
 
   const emissions = {
     Transport: latestEmission.transport,
@@ -60,7 +76,131 @@ function Dashboard() {
         ? a
         : b
     );
-  };
+  };                              
+
+  let sustainabilityScore = 100;
+
+  if (latestEmission?.total > 800) {
+    sustainabilityScore = 20;
+  }
+  else if (latestEmission?.total > 600) {
+    sustainabilityScore = 40;
+  }
+  else if (latestEmission?.total > 400) {
+    sustainabilityScore = 60;
+  }
+  else if (latestEmission?.total > 200) {
+    sustainabilityScore = 80;
+  }
+
+  let level = "";
+
+  if (sustainabilityScore >= 80) {
+    level = "🌍 Planet Guardian";
+  }
+  else if (sustainabilityScore >= 60) {
+    level = "🌱 Green Warrior";
+  }
+  else if (sustainabilityScore >= 40) {
+    level = "🌿 Eco Explorer";
+  }
+  else if (sustainabilityScore >= 20) {
+    level = "♻️ Aware Citizen";
+  }
+  else {
+    level = "🚨 Beginner";
+  }
+
+  const achievements = [];
+
+  if (history.length >= 1) {
+    achievements.push("🌱 First Calculation");
+  }
+
+  if (history.length >= 5) {
+    achievements.push("📊 5 Calculations Completed");
+  }
+
+  if (history.length >= 10) {
+    achievements.push("🏆 10 Calculations Completed");
+  }
+
+  if (sustainabilityScore >= 80) {
+    achievements.push("🌍 Planet Guardian");
+  }
+
+  if (
+    latestEmission &&
+    latestEmission.total < 200
+  ) {
+    achievements.push("♻️ Low Carbon Hero");
+  }
+
+  let nextMilestone = "";
+
+  if (sustainabilityScore < 40) {
+    nextMilestone =
+      "Reach Eco Explorer";
+  }
+  else if (sustainabilityScore < 60) {
+    nextMilestone =
+      "Reach Green Warrior";
+  }
+  else if (sustainabilityScore < 80) {
+    nextMilestone =
+      "Reach Planet Guardian";
+  }
+  else {
+    nextMilestone =
+      "Maximum Level Reached";
+  }
+
+  const recentActivity =
+  history.slice(0, 5);
+
+  const leaderboard = [
+  {
+    name: "You",
+    score: sustainabilityScore,
+  },
+  {
+    name: "Green Hero",
+    score: 78,
+  },
+  {
+    name: "Eco Warrior",
+    score: 65,
+  },
+  ];
+
+  leaderboard.sort(
+    (a, b) => b.score - a.score
+  );
+
+  const currentEmission =
+    latestEmission?.total || 0;
+
+  const goalProgress =
+    Math.min(
+      (goal /
+        Math.max(currentEmission, 1)) *
+        100,
+      100
+    );
+
+    const handleSaveGoal = async () => {
+    const user = await getCurrentUser();
+
+    if (!user || !newGoal) return;
+
+    await updateUserGoal(
+      user.id,
+      Number(newGoal)
+    );
+
+    setGoal(Number(newGoal));
+    setNewGoal("");
+  };    
 
   if (loading) {
     return (
@@ -71,6 +211,8 @@ function Dashboard() {
       </div>
     );
   }
+
+  
 
   return (
 <div className="min-h-screen bg-gradient-to-br from-slate-200 via-emerald-100 to-teal-200 p-6">
@@ -165,6 +307,199 @@ function Dashboard() {
 
     </div>
 
+    {/* Sustainability Level */}
+
+    <div className="bg-slate-800 rounded-3xl shadow-xl p-8 mb-8">
+
+      <h2 className="text-2xl font-bold text-white mb-4">
+        ⭐ Sustainability Level
+      </h2>
+
+      <p className="text-4xl font-bold text-green-400">
+        {level}
+      </p>
+
+      <p className="text-gray-300 mt-3">
+        Sustainability Score:
+        <span className="text-yellow-400 font-bold ml-2">
+          {sustainabilityScore}/100
+        </span>
+      </p>
+
+    </div>
+
+    {/* Eco Achievements */}
+
+    <div className="bg-slate-800 rounded-3xl shadow-xl p-8 mb-8">
+
+      <h2 className="text-2xl font-bold text-white mb-6 text-center">
+        🏆 Eco Achievements
+      </h2>
+
+      <div className="space-y-3">
+
+        {achievements.length > 0 ? (
+          achievements.map(
+            (achievement, index) => (
+              <div
+                key={index}
+                className="
+                  bg-slate-700
+                  rounded-xl
+                  p-4
+                  text-green-400
+                  font-semibold
+                "
+              >
+                ✅ {achievement}
+              </div>
+            )
+          )
+        ) : (
+          <p className="text-gray-400">
+            No achievements unlocked yet.
+          </p>
+        )}
+
+      </div>
+
+    </div>
+
+    {/* Sustainability Goal */}
+
+    <div className="bg-slate-800 rounded-3xl shadow-xl p-8 mb-8">
+
+      <h2 className="text-2xl font-bold text-white mb-4">
+        🎯 Sustainability Goal
+      </h2>
+
+      <p className="text-gray-300">
+        Goal:
+        <span className="text-green-400 font-bold ml-2">
+          Below {goal} kg CO₂
+        </span>
+      </p>
+
+      <p className="text-gray-300 mt-3">
+        Current:
+        <span className="text-yellow-400 font-bold ml-2">
+          {currentEmission.toFixed(2)} kg CO₂
+        </span>
+      </p>
+
+      <div className="w-full bg-slate-700 rounded-full h-4 mt-4">
+
+        <div
+          className="bg-green-500 h-4 rounded-full"
+          style={{
+            width: `${goalProgress}%`,
+          }}
+        />
+
+      </div>
+
+      <p className="mt-4 font-bold text-lg">
+
+        {currentEmission <= goal ? (
+          <span className="text-green-400">
+            ✅ On Track
+          </span>
+        ) : (
+          <span className="text-red-400">
+            ⚠️ Above Goal
+          </span>
+        )}
+
+      </p>
+
+      {/*Change Goal Inside Goal Card*/}
+
+      <div className="mt-6 flex gap-3">
+
+      <input
+        type="number"
+        value={newGoal}
+        onChange={(e) =>
+          setNewGoal(e.target.value)
+        }
+        placeholder="Enter goal"
+        className="
+          bg-slate-700
+          text-white
+          px-4
+          py-2
+          rounded-xl
+        "
+      />
+
+      <button
+        onClick={handleSaveGoal}
+        className="
+          bg-green-600
+          text-white
+          px-4
+          py-2
+          rounded-xl
+        "
+      >
+        Save Goal
+      </button>
+
+    </div>
+
+    </div>    
+    
+
+    {/* Sustainability Roadmap */}
+
+    <div className="bg-slate-800 rounded-3xl shadow-xl p-8 mb-8">
+
+      <h2 className="text-2xl font-bold text-white mb-4">
+        🛣 Sustainability Roadmap
+      </h2>
+
+      <p className="text-green-400 text-xl">
+        {nextMilestone}
+      </p>
+
+    </div>
+
+    {/* Leaderboard */}
+
+    <div className="bg-slate-800 rounded-3xl shadow-xl p-8 mb-8">
+
+      <h2 className="text-2xl font-bold text-white mb-6 text-center">
+        🏅 Sustainability Leaderboard
+      </h2>
+
+      {leaderboard.map((user, index) => (
+
+        <div
+          key={index}
+          className="
+            flex
+            justify-between
+            bg-slate-700
+            p-4
+            rounded-xl
+            mb-3
+          "
+        >
+
+          <span className="text-white font-semibold">
+            #{index + 1} {user.name}
+          </span>
+
+          <span className="text-green-400 font-bold">
+            {user.score}
+          </span>
+
+        </div>
+
+      ))}
+
+    </div>
+
     {/* Latest Breakdown */}
 
    <div className="bg-slate-800 rounded-3xl shadow-xl p-8 mb-8">
@@ -235,7 +570,8 @@ function Dashboard() {
         Recent Calculations
       </h2>
 
-      {history.slice(0, 5).map((item) => (
+    {recentActivity.length > 0 ? (
+      recentActivity.map((item) => (
         <div
           key={item.id}
           className="
@@ -246,17 +582,82 @@ function Dashboard() {
             py-4
           "
         >
-         <span className="text-gray-300">
-            {new Date(
-              item.created_at
-            ).toLocaleDateString()}
-          </span>
+      <span className="text-gray-300">
+        {new Date(item.created_at).toLocaleDateString()}
+      </span>
 
-          <span className="font-bold text-green-600">
-            {item.total.toFixed(2)} kg CO₂
-          </span>
-        </div>
-      ))}
+      <span className="font-bold text-green-600">
+        🌱 {item.total.toFixed(2)} kg CO₂
+      </span>
+    </div>
+        ))
+      ) : (
+        <p className="text-gray-400">
+          No activity yet.
+        </p>
+      )}
+
+    </div>
+
+    {/* Quick Navigation */}
+
+    <div className="bg-slate-800 rounded-3xl shadow-xl p-8 mt-8">
+
+      <h2 className="text-2xl font-bold text-white mb-6 text-center">
+        🚀 Quick Actions
+      </h2>
+
+      <div className="flex flex-wrap justify-center gap-4">
+
+        <button
+          onClick={() =>
+            navigate("/calculator")
+          }
+          className="
+            bg-green-600
+            hover:bg-green-700
+            text-white
+            px-6
+            py-3
+            rounded-xl
+          "
+        >
+          🧮 Calculator
+        </button>
+
+        <button
+          onClick={() =>
+            navigate("/recommendations")
+          }
+          className="
+            bg-blue-600
+            hover:bg-blue-700
+            text-white
+            px-6
+            py-3
+            rounded-xl
+          "
+        >
+          🤖 Recommendations
+        </button>
+
+        <button
+          onClick={() =>
+            navigate("/progress")
+          }
+          className="
+            bg-purple-600
+            hover:bg-purple-700
+            text-white
+            px-6
+            py-3
+            rounded-xl
+          "
+        >
+          📈 Progress
+        </button>
+
+      </div>
 
     </div>
 
