@@ -78,24 +78,33 @@ function Dashboard() {
     );
   };                              
 
-  let sustainabilityScore = 100;
+  let sustainabilityScore = 0;
 
-  if (latestEmission?.total > 800) {
-    sustainabilityScore = 20;
-  }
-  else if (latestEmission?.total > 600) {
-    sustainabilityScore = 40;
-  }
-  else if (latestEmission?.total > 400) {
-    sustainabilityScore = 60;
-  }
-  else if (latestEmission?.total > 200) {
-    sustainabilityScore = 80;
+  if (latestEmission) {
+
+    sustainabilityScore = 100;
+
+    if (latestEmission.total > 800) {
+      sustainabilityScore = 20;
+    }
+    else if (latestEmission.total > 600) {
+      sustainabilityScore = 40;
+    }
+    else if (latestEmission.total > 400) {
+      sustainabilityScore = 60;
+    }
+    else if (latestEmission.total > 200) {
+      sustainabilityScore = 80;
+    }
+
   }
 
   let level = "";
 
-  if (sustainabilityScore >= 80) {
+  if (!latestEmission) {
+    level = "🚀 Not Started";
+  }
+  else if (sustainabilityScore >= 80) {
     level = "🌍 Planet Guardian";
   }
   else if (sustainabilityScore >= 60) {
@@ -104,11 +113,8 @@ function Dashboard() {
   else if (sustainabilityScore >= 40) {
     level = "🌿 Eco Explorer";
   }
-  else if (sustainabilityScore >= 20) {
-    level = "♻️ Aware Citizen";
-  }
   else {
-    level = "🚨 Beginner";
+    level = "♻️ Aware Citizen";
   }
 
   const achievements = [];
@@ -125,7 +131,10 @@ function Dashboard() {
     achievements.push("🏆 10 Calculations Completed");
   }
 
-  if (sustainabilityScore >= 80) {
+  if (
+    latestEmission &&
+    sustainabilityScore >= 80
+  ) {
     achievements.push("🌍 Planet Guardian");
   }
 
@@ -138,7 +147,11 @@ function Dashboard() {
 
   let nextMilestone = "";
 
-  if (sustainabilityScore < 40) {
+  if (!latestEmission) {
+    nextMilestone = "Complete Your First Calculation";
+  }
+  
+  else if(sustainabilityScore < 40) {
     nextMilestone =
       "Reach Eco Explorer";
   }
@@ -158,40 +171,32 @@ function Dashboard() {
   const recentActivity =
   history.slice(0, 5);
 
-  const leaderboard = [
-  {
-    name: "You",
-    score: sustainabilityScore,
-  },
-  {
-    name: "Green Hero",
-    score: 78,
-  },
-  {
-    name: "Eco Warrior",
-    score: 65,
-  },
-  ];
-
-  leaderboard.sort(
-    (a, b) => b.score - a.score
-  );
-
   const currentEmission =
     latestEmission?.total || 0;
 
   const goalProgress =
-    Math.min(
-      (goal /
-        Math.max(currentEmission, 1)) *
-        100,
-      100
-    );
+    !latestEmission
+      ? 0
+      : currentEmission <= goal
+      ? 100
+      : Math.max(
+          0,
+          100 -
+            ((currentEmission - goal) /
+              currentEmission) *
+              100
+      );
 
     const handleSaveGoal = async () => {
     const user = await getCurrentUser();
 
-    if (!user || !newGoal) return;
+    if (
+      !user ||
+      !newGoal ||
+      Number(newGoal) <= 0
+    ) {
+      return;
+    }
 
     await updateUserGoal(
       user.id,
@@ -222,7 +227,7 @@ function Dashboard() {
 
    <div className="bg-slate-800 rounded-2xl shadow-lg p-6 border-l-8 border-green-600">
 
-      <h1 className="text-5xl font-extrabold text-emerald-700">
+      <h1 className="text-5xl font-extrabold text-green-400">
         🌍 Eco Progress Dashboard
       </h1>
 
@@ -255,7 +260,7 @@ function Dashboard() {
 
       <div className="bg-slate-800 rounded-2xl shadow-lg p-6 border-l-8 border-green-600">
 
-        <h2 className="text-gray-500">
+        <h2 className="text-gray-300">
           Latest Footprint
         </h2>
 
@@ -464,42 +469,6 @@ function Dashboard() {
 
     </div>
 
-    {/* Leaderboard */}
-
-    <div className="bg-slate-800 rounded-3xl shadow-xl p-8 mb-8">
-
-      <h2 className="text-2xl font-bold text-white mb-6 text-center">
-        🏅 Sustainability Leaderboard
-      </h2>
-
-      {leaderboard.map((user, index) => (
-
-        <div
-          key={index}
-          className="
-            flex
-            justify-between
-            bg-slate-700
-            p-4
-            rounded-xl
-            mb-3
-          "
-        >
-
-          <span className="text-white font-semibold">
-            #{index + 1} {user.name}
-          </span>
-
-          <span className="text-green-400 font-bold">
-            {user.score}
-          </span>
-
-        </div>
-
-      ))}
-
-    </div>
-
     {/* Latest Breakdown */}
 
    <div className="bg-slate-800 rounded-3xl shadow-xl p-8 mb-8">
@@ -656,6 +625,22 @@ function Dashboard() {
         >
           📈 Progress
         </button>
+
+        <button
+        onClick={() =>
+          navigate("/roadmap")
+        }
+        className="
+          bg-orange-600
+          hover:bg-orange-700
+          text-white
+          px-6
+          py-3
+          rounded-xl
+        "
+      >
+        🛣 Roadmap
+      </button>
 
       </div>
 

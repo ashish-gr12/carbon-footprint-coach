@@ -92,11 +92,52 @@ function Progress() {
   const co2Saved =
   highest - latest;
 
+  let progressScore = 0;
+
+  if (improvement && improvement > 0)
+    progressScore += 40;
+
+  if (latest < average)
+    progressScore += 30;
+
+  if (co2Saved > 0)
+    progressScore += 30;
+
+  let insight = "";
+
+  if (improvement > 10) {
+    insight =
+      "Great work! Your emissions are decreasing consistently.";
+  }
+  else if (improvement > 0) {
+    insight =
+      "You are improving gradually. Keep following recommendations.";
+  }
+  else {
+    insight =
+      "Your emissions increased. Review recommendations to improve.";
+  }
+
+
+  const milestones = [];
+
+  if (history.length >= 1)
+    milestones.push("🌱 First Calculation");
+
+  if (history.length >= 5)
+    milestones.push("📊 Five Calculations");
+
+  if (history.length >= 10)
+    milestones.push("🏆 Ten Calculations");
+
+  if (improvement > 10)
+    milestones.push("📉 Reduced Emissions");
+
   return (
 <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-green-950 p-6">
       <div className="max-w-7xl mx-auto">
 
-       <h1 className="text-5xl font-extrabold text-slate-800 mb-8">
+      <h1 className="text-5xl font-extrabold text-white mb-8">
           📈 Progress Tracking
         </h1>
 
@@ -105,7 +146,7 @@ function Progress() {
         <div className="grid md:grid-cols-4 gap-6 mb-10">
 
           <div className="bg-slate-800 shadow-xl p-6 rounded-2xl shadow-lg border-l-8 border-green-600">
-            <h2 className="text-slate-800 font-semibold">
+           <h2 className="text-gray-300 font-semibold">
               Latest Footprint
             </h2>
 
@@ -117,7 +158,7 @@ function Progress() {
           </div>
 
           <div className="bg-slate-800 shadow-xl p-6 rounded-2xl shadow-lg border-l-8 border-red-600">
-            <h2 className="text-slate-800 font-semibold">
+            <h2 className="text-gray-300 font-semibold">
               Highest Footprint
             </h2>
 
@@ -129,7 +170,7 @@ function Progress() {
           </div>
 
           <div className="bg-slate-800 shadow-xl p-6 rounded-2xl shadow-lg border-l-8 border-blue-600">
-            <h2 className="text-slate-800 font-semibold">
+            <h2 className="text-gray-300 font-semibold">
               Lowest Footprint
             </h2>
 
@@ -141,7 +182,7 @@ function Progress() {
           </div>
 
           <div className="bg-slate-800 shadow-xl p-6 rounded-2xl shadow-lg border-l-8 border-purple-600">
-            <h2 className="text-slate-800 font-semibold">
+            <h2 className="text-gray-300 font-semibold">
               Average Footprint
             </h2>
 
@@ -240,11 +281,26 @@ function Progress() {
 
         </div>
 
+        {/* Progress Score */}
+
+        <div className="bg-slate-800 rounded-2xl shadow-lg p-6 mb-8">
+
+          <h2 className="text-2xl font-bold text-white mb-4">
+            🎯 Progress Score
+          </h2>
+
+          <p className="text-5xl font-bold text-green-400">
+            {progressScore}/100
+          </p>
+
+        </div>
+
+
         {/* Progress Insight */}
 
         <div className="bg-slate-800 shadow-xl rounded-2xl shadow-lg p-6 mb-10">
 
-         <h2 className="text-2xl font-bold text-slate-800 mb-4">
+         <h2 className="text-2xl font-bold text-white mb-4">
             🌱 Progress Insight
           </h2>
 
@@ -267,6 +323,29 @@ function Progress() {
               {highest.toFixed(2)} kg CO₂
             </strong>
           </p>
+
+        </div>
+
+        <div className="bg-slate-800 rounded-2xl shadow-lg p-6 mb-8">
+
+        <h2 className="text-2xl font-bold text-white mb-4">
+          🏅 Milestones
+        </h2>
+
+        <div className="space-y-3">
+
+          {milestones.map((item, index) => (
+
+            <div
+              key={index}
+              className="bg-slate-700 p-4 rounded-xl text-green-400"
+            >
+              {item}
+            </div>
+
+          ))}
+
+        </div>
 
         </div>
 
@@ -310,7 +389,7 @@ function Progress() {
 
         <div className="bg-slate-800 shadow-xl rounded-2xl shadow-lg p-6">
 
-          <h2 className="text-2xl font-bold text-slate-800 mb-6">
+          <h2 className="text-2xl font-bold text-white mb-6">
             📜 Emission History
           </h2>
 
