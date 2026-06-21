@@ -31,3 +31,12 @@ export async function getEmissionHistory(userId) {
 
   return { data, error };
 }
+
+export async function getAllEmissions() {
+  return await supabase
+    .from("emissions")
+    .select("*")
+    .order("created_at", {
+      ascending: false,
+    });
+}

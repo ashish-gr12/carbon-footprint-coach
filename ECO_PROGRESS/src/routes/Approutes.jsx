@@ -10,6 +10,7 @@ import Recommendations from "../pages/Recommendations";
 import Roadmap from "../pages/Roadmap";
 import Progress from "../pages/Progress";
 import Leaderboard from "../pages/Leaderboard";
+import Profile from "../pages/Profile";
 
 function AppRoutes() {
   return (
@@ -23,6 +24,15 @@ function AppRoutes() {
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/profile"
+        element={
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
         }
       />
 

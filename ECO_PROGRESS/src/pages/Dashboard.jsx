@@ -9,6 +9,11 @@ import {
   getUserGoal,
   updateUserGoal,
 } from "../services/goalService";
+import {
+  getProfile,
+  getAllProfiles,
+} from "../services/profileService";
+
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -17,6 +22,8 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [goal, setGoal] = useState(300);
   const [newGoal, setNewGoal] = useState("");
+  const [profile, setProfile] =
+  useState(null);
   useEffect(() => {
   const loadDashboard = async () => {
   const user = await getCurrentUser();  
@@ -35,6 +42,11 @@ function Dashboard() {
 
       const { data: goalData } =
         await getUserGoal(user.id);
+
+      const { data: profileData } =
+        await getProfile(user.id);
+
+        setProfile(profileData);
 
       setLatestEmission(latest);
       setHistory(historyData || []);
@@ -228,7 +240,9 @@ function Dashboard() {
    <div className="bg-slate-800 rounded-2xl shadow-lg p-6 border-l-8 border-green-600">
 
       <h1 className="text-5xl font-extrabold text-green-400">
-        🌍 Eco Progress Dashboard
+              {profile?.username
+        ? `Welcome, ${profile.username} 👋`
+        : "🌍 Eco Progress Dashboard"}
       </h1>
 
       <p className="text-slate-300 mt-2 text-lg">
@@ -640,6 +654,23 @@ function Dashboard() {
         "
       >
         🛣 Roadmap
+      </button>
+
+
+      <button
+        onClick={() =>
+          navigate("/profile")
+        }
+        className="
+          bg-indigo-600
+          hover:bg-indigo-700
+          text-white
+          px-6
+          py-3
+          rounded-xl
+        "
+      >
+        👤 Profile
       </button>
 
       </div>

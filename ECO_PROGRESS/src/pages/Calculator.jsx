@@ -11,6 +11,22 @@ import {
 import { useNavigate } from "react-router-dom";
 import { saveEmission } from "../services/emissionService";
 import { getCurrentUser } from "../services/authService";
+import {
+  saveLeaderboardEntry,
+} from "../services/leaderboardService";
+
+import {
+  calculateEcoScore,
+  calculateLeaderboardScore,
+} from "../utils/leaderboardUtils";
+
+import {
+  getProfile,
+} from "../services/profileService";
+
+import {
+  getEmissionHistory,
+} from "../services/emissionService";
 
 function Calculator() {
   const [transport, setTransport] = useState("");
@@ -107,6 +123,73 @@ function Calculator() {
       alert("Failed to save emission data");
       return;
     }
+
+    // Load profile
+
+    const { data: profile } =
+      await getProfile(user.id);
+
+    // Get history including latest save
+
+    const { data: history } =
+      await getEmissionHistory(user.id);
+
+    const totals =
+      history?.map(item => item.total) || [];
+
+    const highest =
+      Math.max(...totals);
+
+    const latest =
+      result.total;
+
+    // Reduction %
+
+    let reduction = 0;
+
+    if (highest > 0) {
+      reduction =
+        ((highest - latest) / highest) * 100;
+    }
+
+    // Eco Score
+
+    const ecoScore =
+      calculateEcoScore(latest);
+
+    // Final Score
+
+    const leaderboardScore =
+      calculateLeaderboardScore(
+        ecoScore,
+        reduction
+      );
+
+    // Save leaderboard row
+
+    await saveLeaderboardEntry({
+      user_id: user.id,
+
+      username:
+        profile?.username ||
+        "Unknown User",
+
+      eco_score: ecoScore,
+
+      reduction_percentage:
+        reduction,
+
+      total_score:
+        leaderboardScore,
+
+      total_calculations:
+        history?.length || 1,
+
+      updated_at:
+        new Date().toISOString(),
+    });
+
+    console.log("Leaderboard updated");
     
     navigate("/results", {
       state: result,
