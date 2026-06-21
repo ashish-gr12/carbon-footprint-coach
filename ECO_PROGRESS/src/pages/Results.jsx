@@ -1,4 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import ResultsPieChart
+from "../components/results/ResultsPieChart";
+import ImpactEquivalents
+from "../components/results/ImpactEquivalents";
 
 function Results() {
   const location = useLocation();
@@ -164,68 +168,84 @@ function Results() {
             </p>
           </div>
 
-<div className="bg-green-100 border-l-8 border-green-600 p-6 rounded-2xl shadow-lg">
-  <h3 className="font-bold text-lg text-green-900">
-    🍔 Food
-  </h3>
+          <div className="bg-green-100 border-l-8 border-green-600 p-6 rounded-2xl shadow-lg">
+            <h3 className="font-bold text-lg text-green-900">
+              🍔 Food
+            </h3>
 
-  <p className="text-4xl font-bold text-green-700 mt-3">
-    {result.food.toFixed(2)}
-  </p>
+            <p className="text-4xl font-bold text-green-700 mt-3">
+              {result.food.toFixed(2)}
+            </p>
 
-  <p className="text-green-800">
-    kg CO₂
-  </p>
-</div>
+            <p className="text-green-800">
+              kg CO₂
+            </p>
+          </div>
 
-<div className="bg-pink-100 border-l-8 border-pink-600 p-6 rounded-2xl shadow-lg">
-  <h3 className="font-bold text-lg text-pink-900">
-    🛍 Shopping
-  </h3>
+          <div className="bg-pink-100 border-l-8 border-pink-600 p-6 rounded-2xl shadow-lg">
+            <h3 className="font-bold text-lg text-pink-900">
+              🛍 Shopping
+            </h3>
 
-  <p className="text-4xl font-bold text-pink-700 mt-3">
-    {result.shopping.toFixed(2)}
-  </p>
+            <p className="text-4xl font-bold text-pink-700 mt-3">
+              {result.shopping.toFixed(2)}
+            </p>
 
-  <p className="text-pink-800">
-    kg CO₂
-  </p>
-</div>
+            <p className="text-pink-800">
+              kg CO₂
+            </p>
+          </div>
 
-<div className="bg-indigo-100 border-l-8 border-indigo-600 p-6 rounded-2xl shadow-lg">
-  <h3 className="font-bold text-lg text-indigo-900">
-    💻 Electronics
-  </h3>
+          <div className="bg-indigo-100 border-l-8 border-indigo-600 p-6 rounded-2xl shadow-lg">
+            <h3 className="font-bold text-lg text-indigo-900">
+              💻 Electronics
+            </h3>
 
-  <p className="text-4xl font-bold text-indigo-700 mt-3">
-    {result.electronics.toFixed(2)}
-  </p>
+            <p className="text-4xl font-bold text-indigo-700 mt-3">
+              {result.electronics.toFixed(2)}
+            </p>
 
-  <p className="text-indigo-800">
-    kg CO₂
-  </p>
-</div>
+            <p className="text-indigo-800">
+              kg CO₂
+            </p>
+          </div>
 
-<div className="bg-cyan-100 border-l-8 border-cyan-600 p-6 rounded-2xl shadow-lg">
-  <h3 className="font-bold text-lg text-cyan-900">
-    🎫 Travel
-  </h3>
+          <div className="bg-cyan-100 border-l-8 border-cyan-600 p-6 rounded-2xl shadow-lg">
+            <h3 className="font-bold text-lg text-cyan-900">
+              🎫 Travel
+            </h3>
 
-  <p className="text-4xl font-bold text-cyan-700 mt-3">
-    {result.travelSpend.toFixed(2)}
-  </p>
+            <p className="text-4xl font-bold text-cyan-700 mt-3">
+              {result.travelSpend.toFixed(2)}
+            </p>
 
-  <p className="text-cyan-800">
-    kg CO₂
-  </p>
-</div>
+            <p className="text-cyan-800">
+              kg CO₂
+            </p>
+          </div>
 
+        </div>
+
+        {/* Emission Pie Chart */}
+
+        <h2 className="text-3xl font-bold mb-4">
+            Emission Distribution
+        </h2>
+
+        <div className="mb-8">
+          <ResultsPieChart result={result} />
+        </div>
+
+        {/*Impact Equivalents */}
+
+        <div className="mt-6 mb-8">
+          <ImpactEquivalents result={result} />
         </div>
 
         {/* Biggest Contributor */}
         <div className="bg-gradient-to-r from-yellow-200 to-orange-200 border border-yellow-400 rounded-2xl p-8 shadow-lg mb-8">
 
-          <h2 className="text-2xl font-bold mb-3">
+          <h2 className="text-3xl font-bold mb-6 !text-black">
             🏆 Biggest Contributor
           </h2>
 
@@ -245,18 +265,6 @@ function Results() {
             This category contributes the most to your carbon footprint.
           </p>
 
-        </div>
-
-        {/* AI Placeholder */}
-        <div className="bg-gradient-to-r from-cyan-100 to-blue-200 border border-blue-400 rounded-2xl p-8 shadow-lg mb-8">
-          <h2 className="text-2xl font-bold mb-3">
-            🤖 AI Sustainability Coach
-          </h2>
-
-          <p className="text-lg">
-            Personalized recommendations based on your emissions
-            will appear here in upcoming phases.
-          </p>
         </div>
 
         {/* Action Buttons */}

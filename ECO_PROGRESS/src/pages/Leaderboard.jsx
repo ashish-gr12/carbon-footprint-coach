@@ -31,11 +31,8 @@ function Leaderboard() {
       await getLeaderboard();
 
     setLeaders(data || []);
-
     setLoading(false);
 
-    setLeaders(data || []);
-    setLoading(false);
   };
 
   if (loading) {
@@ -97,26 +94,30 @@ function Leaderboard() {
 
         {leaders.map((user, index) => (
 
-          <tr
-            key={user.user_id}
-            className={`
-              border-b
-              border-slate-700
-              hover:bg-slate-700
+      <tr
+        key={user.user_id}
+        className={`
+          border-b
+          border-slate-700
+          hover:bg-slate-700
 
-            ${
-              user.user_id === currentUserId
-                ? "bg-green-900"
-                : index === 0
-                ? "bg-yellow-950"
-                : index === 1
-                ? "bg-slate-700"
-                : index === 2
-                ? "bg-orange-950"
-                : ""
-              }
-            `}
-          >
+        ${
+          index === 0
+            ? "bg-yellow-900"
+            : index === 1
+            ? "bg-zinc-600"
+            : index === 2
+            ? "bg-orange-800"
+            : ""
+        }
+
+          ${
+            user.user_id === currentUserId
+              ? "border-2 border-green-400"
+              : ""
+          }
+        `}
+      >
 
             <td
               className={`

@@ -157,29 +157,6 @@ function Dashboard() {
     achievements.push("♻️ Low Carbon Hero");
   }
 
-  let nextMilestone = "";
-
-  if (!latestEmission) {
-    nextMilestone = "Complete Your First Calculation";
-  }
-  
-  else if(sustainabilityScore < 40) {
-    nextMilestone =
-      "Reach Eco Explorer";
-  }
-  else if (sustainabilityScore < 60) {
-    nextMilestone =
-      "Reach Green Warrior";
-  }
-  else if (sustainabilityScore < 80) {
-    nextMilestone =
-      "Reach Planet Guardian";
-  }
-  else {
-    nextMilestone =
-      "Maximum Level Reached";
-  }
-
   const recentActivity =
   history.slice(0, 5);
 
@@ -468,20 +445,6 @@ function Dashboard() {
 
     </div>    
     
-
-    {/* Sustainability Roadmap */}
-
-    <div className="bg-slate-800 rounded-3xl shadow-xl p-8 mb-8">
-
-      <h2 className="text-2xl font-bold text-white mb-4">
-        🛣 Sustainability Roadmap
-      </h2>
-
-      <p className="text-green-400 text-xl">
-        {nextMilestone}
-      </p>
-
-    </div>
 
     {/* Latest Breakdown */}
 

@@ -183,7 +183,7 @@ function Calculator() {
         leaderboardScore,
 
       total_calculations:
-        history?.length || 1,
+        history?.length ?? 0,
 
       updated_at:
         new Date().toISOString(),

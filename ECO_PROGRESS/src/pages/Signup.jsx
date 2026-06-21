@@ -19,7 +19,7 @@ function Signup() {
 
     alert("Signup Successful");
 
-    navigate("/login");
+    navigate("/dashboard");
 
   };
 

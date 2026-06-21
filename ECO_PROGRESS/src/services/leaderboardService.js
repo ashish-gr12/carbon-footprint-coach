@@ -6,7 +6,9 @@ export async function saveLeaderboardEntry(
 ) {
   return await supabase
     .from("leaderboard")
-    .upsert(data);
+    .upsert(data, {
+      onConflict: "user_id",
+    });
 }
 
 export async function getLeaderboard() {
