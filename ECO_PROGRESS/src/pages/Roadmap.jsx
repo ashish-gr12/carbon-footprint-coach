@@ -494,6 +494,34 @@ function Roadmap() {
 
     </p>
 
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="bg-purple-600 text-white px-6 py-3 rounded-xl hover:bg-purple-700 mt-6"
+          >
+            📊 Dashboard
+          </button>
+
+                    <button
+            onClick={() => navigate("/calculator")}
+            className="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 ml-6"
+          >
+            🧮 Recalculate
+          </button>
+
+          <button
+            onClick={() => navigate("/progress")}
+            className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 ml-6"
+          >
+            📈 Progress
+          </button>
+
+          <button
+            onClick={() => navigate("/leaderboard")}
+            className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 ml-6"
+          >
+            📈 Leaderboard
+          </button>
+
     </div>
 
       </div>

@@ -4,9 +4,10 @@ from "../services/authService";
 import {
   getLeaderboard,
 } from "../services/leaderboardService";
+import { useNavigate } from "react-router-dom";
 
 function Leaderboard() {
-
+  const navigate = useNavigate();
   const [leaders, setLeaders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] =
@@ -196,6 +197,27 @@ function Leaderboard() {
       </tbody>
 
     </table>
+
+        {/* Quick Navigation */}
+
+    <div className="bg-slate-800 rounded-3xl shadow-xl p-8 mt-8">
+
+      <h2 className="text-2xl font-bold text-white mb-6 text-center">
+        🚀 Quick Actions
+      </h2>
+
+      <div className="flex flex-wrap justify-center gap-4">
+
+      <button
+        onClick={() => navigate("/dashboard")}
+        className="bg-purple-600 text-white px-6 py-3 rounded-xl hover:bg-purple-700"
+      >
+        📊 Dashboard
+      </button>
+     
+
+      </div>
+      </div>
 
   </div>
 
